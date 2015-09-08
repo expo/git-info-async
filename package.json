@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/exponentjs/git-info-async/issues"
   },
-  "homepage": "https://github.com/exponentjs/git-info-async#readme"
+  "homepage": "https://github.com/exponentjs/git-info-async#readme",
+  "dependencies": {
+    "promise-props": "^1.0.0"
+  }
 }

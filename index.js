@@ -1,20 +1,32 @@
 var child_process = require('child_process');
+var promiseProps = require('promise-props');
 
-module.exports = function (dir, opts) {
-  opts = opts || {};
-  opts.encoding = opts.encoding || 'utf8';
+function _outputAsync(command, dir) {
+  var opts = {
+    cwd: dir,
+    encoding: 'utf8',
+  };
+
   return new Promise(function (fulfill, reject) {
-    child_process.exec('git rev-parse HEAD', {
-      cwd: dir,
-    }, function (err, stdout, stderr) {
+    child_process.exec(command, opts, function (err, stdout, stderr) {
       if (err) {
         reject(err);
       } else {
-        var rev = stdout.toString().trim();
-        fulfill({
-          rev: rev,
-        });
+        fulfill(stdout.trim());
       }
     });
   });
+  
+}
+
+module.exports = function (dir) {
+
+  var rev$ = _outputAsync('git rev-parse HEAD', dir);
+  var branch$ = _outputAsync('git rev-parse --abbrev-ref HEAD', dir);
+
+  return promiseProps({
+    rev: rev$,
+    branch: branch$,
+  });
+
 };
